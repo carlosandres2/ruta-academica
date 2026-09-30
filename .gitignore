@@ -7,18 +7,35 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
+# Dependencias
+node_modules/
+
+# Build
+dist/
+dist-ssr/
+
+# Archivos locales
 *.local
 
-# Editor directories and files
+# Variables de entorno
+.env
+.env.*
+!.env.example
+
+# Editor
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
 .DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+# Archivos de respaldo locales
+*.bak
+*.backup*
+*.seguridad
+*.antes_*
+
+*.bak*

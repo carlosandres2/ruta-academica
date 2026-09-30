@@ -1,249 +1,141 @@
-import { useState } from "react";
-import { BrowserRouter, Routes, Route, Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Link,
+  useNavigate
+} from "react-router-dom";
+
 import "./index.css";
+
 import Activities from "./pages/Activities";
+import Subjects from "./pages/Subjects";
+import Calendar from "./pages/Calendar";
+import Progress from "./pages/Progress";
+
+import {
+  crearUsuario,
+  iniciarSesion
+} from "./services/usuarioService";
+
+import api from "./services/api";
+
 
 /* =========================================================
    INICIO
 ========================================================= */
 
 function Inicio() {
+
   return (
-    <div className="landing">
-      <nav className="navbar">
-        <div className="logo">
-          📚 Ruta Académica
-        </div>
+    <div className="inicio">
 
-        <div className="nav-links">
-          <Link to="/">Inicio</Link>
-          <Link to="/login">Iniciar sesión</Link>
+      <div className="inicio-card">
 
-          <Link to="/registro" className="btn-primary">
-            Registrarse
-          </Link>
-        </div>
-      </nav>
+        <h1>Ruta Académica</h1>
 
-      <main className="hero">
-        <section className="hero-text">
-          <span className="badge">
-            🎓 Organización académica
-          </span>
-
-          <h1>
-            Organiza tus actividades.
-            <br />
-            <span>Prioriza tus tareas.</span>
-          </h1>
-
-          <p>
-            Ruta Académica es una plataforma diseñada para ayudarte a
-            organizar tus asignaturas, actividades, fechas de entrega
-            y prioridades en un solo lugar.
-          </p>
-
-          <div className="hero-buttons">
-            <Link
-              to="/registro"
-              className="btn-primary btn-large"
-            >
-              Comenzar ahora
-            </Link>
-
-            <Link
-              to="/login"
-              className="btn-secondary"
-            >
-              Iniciar sesión
-            </Link>
-          </div>
-        </section>
-
-        <section className="hero-card">
-          <div className="dashboard-preview">
-
-            <div className="preview-header">
-              <strong>📊 Mi Ruta Académica</strong>
-              <span>👤 Carlos</span>
-            </div>
-
-            <div className="stats">
-
-              <div className="stat-card">
-                <strong>12</strong>
-                <span>Pendientes</span>
-              </div>
-
-              <div className="stat-card urgent">
-                <strong>5</strong>
-                <span>Urgentes</span>
-              </div>
-
-              <div className="stat-card completed">
-                <strong>8</strong>
-                <span>Completadas</span>
-              </div>
-
-            </div>
-
-            <div className="activity-preview">
-
-              <h3>Actividades próximas</h3>
-
-              <div className="activity">
-                <div>
-                  <strong>Taller de Bases de Datos</strong>
-                  <small>📅 30/09/2026</small>
-                </div>
-
-                <span className="priority high">
-                  Alta
-                </span>
-              </div>
-
-              <div className="activity">
-                <div>
-                  <strong>Proyecto Desarrollo Web</strong>
-                  <small>📅 02/10/2026</small>
-                </div>
-
-                <span className="priority medium">
-                  Media
-                </span>
-              </div>
-
-              <div className="activity">
-                <div>
-                  <strong>Auditoría Informática</strong>
-                  <small>📅 05/10/2026</small>
-                </div>
-
-                <span className="priority low">
-                  Baja
-                </span>
-              </div>
-
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <section className="features">
-
-        <div className="feature">
-          <div className="feature-icon">📚</div>
-
-          <h3>Organiza</h3>
-
-          <p>
-            Administra tus asignaturas y actividades académicas.
-          </p>
-        </div>
-
-        <div className="feature">
-          <div className="feature-icon">🎯</div>
-
-          <h3>Prioriza</h3>
-
-          <p>
-            Identifica las tareas que requieren mayor atención.
-          </p>
-        </div>
-
-        <div className="feature">
-          <div className="feature-icon">📈</div>
-
-          <h3>Haz seguimiento</h3>
-
-          <p>
-            Consulta el progreso de tus responsabilidades académicas.
-          </p>
-        </div>
-
-      </section>
-
-      <footer>
         <p>
-          © 2026 Ruta Académica — Organización académica inteligente.
+          Organiza tus actividades. Prioriza tus tareas.
+          Avanza hacia tus objetivos académicos.
         </p>
-      </footer>
+
+        <div className="inicio-buttons">
+
+          <Link to="/login">
+            Iniciar sesión
+          </Link>
+
+          <Link to="/registro">
+            Crear cuenta
+          </Link>
+
+        </div>
+
+      </div>
+
     </div>
   );
+
 }
+
 
 /* =========================================================
    LOGIN
 ========================================================= */
 
 function Login() {
+
   const navigate = useNavigate();
 
   const [correo, setCorreo] = useState("");
-  const [contrasena, setContrasena] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [mensaje, setMensaje] = useState("");
   const [error, setError] = useState("");
 
-  const manejarLogin = (e) => {
+
+  const manejarLogin = async (e) => {
+
     e.preventDefault();
 
+    setMensaje("");
     setError("");
 
-    if (!correo || !contrasena) {
-      setError("Por favor completa todos los campos.");
-      return;
-    }
+    if (!correo || !password) {
 
-    const usuarioGuardado = localStorage.getItem(
-      "rutaAcademicaUsuario"
-    );
-
-    if (!usuarioGuardado) {
       setError(
-        "No existe una cuenta registrada. Primero debes registrarte."
+        "Por favor completa todos los campos."
       );
+
       return;
     }
 
-    const usuario = JSON.parse(usuarioGuardado);
+    try {
 
-    if (
-      usuario.correo !== correo ||
-      usuario.contrasena !== contrasena
-    ) {
+      const usuario = await iniciarSesion(
+        correo,
+        password
+      );
+
+      localStorage.setItem(
+        "rutaAcademicaSesion",
+        JSON.stringify(usuario)
+      );
+
+      setMensaje(
+        "Inicio de sesión exitoso."
+      );
+
+      setTimeout(() => {
+
+        navigate("/dashboard");
+
+      }, 500);
+
+    } catch (err) {
+
+      console.error(err);
+
       setError(
-        "El correo o la contraseña son incorrectos."
+        err?.response?.data?.mensaje ||
+        "No fue posible iniciar sesión."
       );
-      return;
+
     }
 
-    localStorage.setItem(
-      "rutaAcademicaSesion",
-      JSON.stringify(usuario)
-    );
-
-    navigate("/dashboard");
   };
+
 
   return (
     <div className="auth-page">
 
       <div className="auth-card">
 
-        <div className="logo">
-          📚 Ruta Académica
-        </div>
+        <h1>Ruta Académica</h1>
 
-        <h1>Iniciar sesión</h1>
-
-        <p>
-          Ingresa para continuar con tu ruta académica.
-        </p>
-
-        {error && (
-          <div className="auth-error">
-            {error}
-          </div>
-        )}
+        <h2>Iniciar sesión</h2>
 
         <form onSubmit={manejarLogin}>
 
@@ -255,7 +147,9 @@ function Login() {
             type="email"
             placeholder="correo@ejemplo.com"
             value={correo}
-            onChange={(e) => setCorreo(e.target.value)}
+            onChange={(e) =>
+              setCorreo(e.target.value)
+            }
           />
 
           <label>
@@ -265,152 +159,147 @@ function Login() {
           <input
             type="password"
             placeholder="Contraseña"
-            value={contrasena}
-            onChange={(e) => setContrasena(e.target.value)}
+            value={password}
+            onChange={(e) =>
+              setPassword(e.target.value)
+            }
           />
 
-          <button
-            type="submit"
-            className="btn-primary"
-          >
-            Iniciar sesión
+          {error && (
+            <p className="error-message">
+              {error}
+            </p>
+          )}
+
+          {mensaje && (
+            <p className="success-message">
+              {mensaje}
+            </p>
+          )}
+
+          <button type="submit">
+            Ingresar
           </button>
 
         </form>
 
-        <p className="auth-link">
+        <p>
+
           ¿No tienes una cuenta?
 
           <Link to="/registro">
             {" "}Registrarse
           </Link>
+
         </p>
 
         <Link to="/">
-          ← Volver al inicio
+          Volver al inicio
         </Link>
 
       </div>
+
     </div>
   );
+
 }
+
 
 /* =========================================================
    REGISTRO
 ========================================================= */
 
 function Registro() {
+
   const navigate = useNavigate();
 
   const [nombre, setNombre] = useState("");
   const [correo, setCorreo] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmarPassword, setConfirmarPassword] = useState("");
   const [programa, setPrograma] = useState("");
-  const [contrasena, setContrasena] = useState("");
-  const [confirmarContrasena, setConfirmarContrasena] =
-    useState("");
+  const [institucion, setInstitucion] = useState("");
 
-  const [error, setError] = useState("");
   const [mensaje, setMensaje] = useState("");
+  const [error, setError] = useState("");
 
-  const manejarRegistro = (e) => {
+
+  const manejarRegistro = async (e) => {
+
     e.preventDefault();
 
-    setError("");
     setMensaje("");
+    setError("");
 
     if (
       !nombre ||
       !correo ||
+      !password ||
+      !confirmarPassword ||
       !programa ||
-      !contrasena ||
-      !confirmarContrasena
+      !institucion
     ) {
+
       setError(
         "Por favor completa todos los campos."
       );
+
       return;
     }
 
-    if (contrasena.length < 6) {
-      setError(
-        "La contraseña debe tener mínimo 6 caracteres."
-      );
-      return;
-    }
+    if (password !== confirmarPassword) {
 
-    if (contrasena !== confirmarContrasena) {
       setError(
         "Las contraseñas no coinciden."
       );
+
       return;
     }
 
-    const usuarioExistente =
-      localStorage.getItem(
-        "rutaAcademicaUsuario"
+    try {
+
+      await crearUsuario({
+
+        nombre,
+        correo,
+        password,
+        programa,
+        institucion
+
+      });
+
+      setMensaje(
+        "Registro exitoso. Ahora puedes iniciar sesión."
       );
 
-    if (usuarioExistente) {
-      const usuario = JSON.parse(usuarioExistente);
+      setTimeout(() => {
 
-      if (
-        usuario.correo.toLowerCase() ===
-        correo.toLowerCase()
-      ) {
-        setError(
-          "Ya existe una cuenta con este correo."
-        );
-        return;
-      }
+        navigate("/login");
+
+      }, 1200);
+
+    } catch (err) {
+
+      console.error(err);
+
+      setError(
+        err?.response?.data?.mensaje ||
+        "No fue posible crear la cuenta."
+      );
+
     }
 
-    const nuevoUsuario = {
-      nombre,
-      correo,
-      programa,
-      contrasena,
-    };
-
-    localStorage.setItem(
-      "rutaAcademicaUsuario",
-      JSON.stringify(nuevoUsuario)
-    );
-
-    setMensaje(
-      "Cuenta creada correctamente. Redirigiendo al inicio de sesión..."
-    );
-
-    setTimeout(() => {
-      navigate("/login");
-    }, 1500);
   };
+
 
   return (
     <div className="auth-page">
 
       <div className="auth-card">
 
-        <div className="logo">
-          📚 Ruta Académica
-        </div>
+        <h1>Ruta Académica</h1>
 
-        <h1>Crear cuenta</h1>
-
-        <p>
-          Comienza a organizar tus actividades académicas.
-        </p>
-
-        {error && (
-          <div className="auth-error">
-            {error}
-          </div>
-        )}
-
-        {mensaje && (
-          <div className="auth-success">
-            {mensaje}
-          </div>
-        )}
+        <h2>Crear cuenta</h2>
 
         <form onSubmit={manejarRegistro}>
 
@@ -422,7 +311,9 @@ function Registro() {
             type="text"
             placeholder="Carlos Andrés Pérez"
             value={nombre}
-            onChange={(e) => setNombre(e.target.value)}
+            onChange={(e) =>
+              setNombre(e.target.value)
+            }
           />
 
           <label>
@@ -433,7 +324,35 @@ function Registro() {
             type="email"
             placeholder="correo@ejemplo.com"
             value={correo}
-            onChange={(e) => setCorreo(e.target.value)}
+            onChange={(e) =>
+              setCorreo(e.target.value)
+            }
+          />
+
+          <label>
+            Contraseña
+          </label>
+
+          <input
+            type="password"
+            placeholder="Contraseña"
+            value={password}
+            onChange={(e) =>
+              setPassword(e.target.value)
+            }
+          />
+
+          <label>
+            Confirmar contraseña
+          </label>
+
+          <input
+            type="password"
+            placeholder="Repite la contraseña"
+            value={confirmarPassword}
+            onChange={(e) =>
+              setConfirmarPassword(e.target.value)
+            }
           />
 
           <label>
@@ -444,310 +363,684 @@ function Registro() {
             type="text"
             placeholder="Ingeniería Informática"
             value={programa}
-            onChange={(e) => setPrograma(e.target.value)}
-          />
-
-          <label>
-            Contraseña
-          </label>
-
-          <input
-            type="password"
-            placeholder="Mínimo 6 caracteres"
-            value={contrasena}
-            onChange={(e) => setContrasena(e.target.value)}
-          />
-
-          <label>
-            Confirmar contraseña
-          </label>
-
-          <input
-            type="password"
-            placeholder="Confirmar contraseña"
-            value={confirmarContrasena}
             onChange={(e) =>
-              setConfirmarContrasena(e.target.value)
+              setPrograma(e.target.value)
             }
           />
 
-          <button
-            type="submit"
-            className="btn-primary"
-          >
-            Crear cuenta
+          <label>
+            Institución
+          </label>
+
+          <input
+            type="text"
+            placeholder="Universidad Militar Nueva Granada"
+            value={institucion}
+            onChange={(e) =>
+              setInstitucion(e.target.value)
+            }
+          />
+
+          {error && (
+            <p className="error-message">
+              {error}
+            </p>
+          )}
+
+          {mensaje && (
+            <p className="success-message">
+              {mensaje}
+            </p>
+          )}
+
+          <button type="submit">
+            Registrarse
           </button>
 
         </form>
 
-        <p className="auth-link">
+        <p>
+
           ¿Ya tienes una cuenta?
 
           <Link to="/login">
             {" "}Iniciar sesión
           </Link>
+
         </p>
 
         <Link to="/">
-          ← Volver al inicio
+          Volver al inicio
         </Link>
 
       </div>
+
     </div>
   );
+
 }
+
 
 /* =========================================================
    DASHBOARD
 ========================================================= */
 
 function Dashboard() {
+
   const navigate = useNavigate();
 
-  const usuarioGuardado =
-    localStorage.getItem("rutaAcademicaSesion");
+  const [usuario, setUsuario] = useState(null);
 
-  const usuario = usuarioGuardado
-    ? JSON.parse(usuarioGuardado)
-    : null;
+  const [actividades, setActividades] = useState([]);
+  const [asignaturas, setAsignaturas] = useState([]);
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+
+  useEffect(() => {
+
+    const sesion =
+      localStorage.getItem(
+        "rutaAcademicaSesion"
+      );
+
+    if (!sesion) {
+
+      navigate("/login");
+
+      return;
+
+    }
+
+    let usuarioGuardado;
+
+    try {
+
+      usuarioGuardado =
+        JSON.parse(sesion);
+
+      setUsuario(usuarioGuardado);
+
+    } catch (err) {
+
+      console.error(err);
+
+      localStorage.removeItem(
+        "rutaAcademicaSesion"
+      );
+
+      navigate("/login");
+
+      return;
+
+    }
+
+
+    const cargarDatos = async () => {
+
+      try {
+
+        setLoading(true);
+        setError("");
+
+        const usuarioId =
+          usuarioGuardado.id ??
+          usuarioGuardado.usuario_id ??
+          null;
+
+
+        if (!usuarioId) {
+
+          setError(
+            "No fue posible identificar al usuario."
+          );
+
+          setLoading(false);
+
+          return;
+
+        }
+
+
+        console.log(
+          "Dashboard - Usuario actual:",
+          usuarioId
+        );
+
+
+        const [
+          actividadesResponse,
+          asignaturasResponse
+        ] = await Promise.all([
+
+          api.get("/actividades", {
+            params: {
+              usuario_id: usuarioId
+            }
+          }),
+
+          api.get("/asignaturas", {
+            params: {
+              usuario_id: usuarioId
+            }
+          })
+
+        ]);
+
+
+        setActividades(
+          Array.isArray(
+            actividadesResponse.data
+          )
+            ? actividadesResponse.data
+            : []
+        );
+
+
+        setAsignaturas(
+          Array.isArray(
+            asignaturasResponse.data
+          )
+            ? asignaturasResponse.data
+            : []
+        );
+
+
+      } catch (err) {
+
+        console.error(err);
+
+        setError(
+          "No fue posible cargar la información académica."
+        );
+
+      } finally {
+
+        setLoading(false);
+
+      }
+
+    };
+
+
+    cargarDatos();
+
+  }, [navigate]);
+
 
   const cerrarSesion = () => {
+
     localStorage.removeItem(
       "rutaAcademicaSesion"
     );
 
     navigate("/login");
+
   };
 
-  if (!usuario) {
-    return (
-      <div className="auth-page">
-        <div className="auth-card">
 
-          <h1>Sesión no iniciada</h1>
+  const totalActividades =
+    actividades.length;
 
-          <p>
-            Debes iniciar sesión para acceder al Dashboard.
-          </p>
 
-          <Link
-            to="/login"
-            className="btn-primary"
-          >
-            Iniciar sesión
-          </Link>
+  const completadas =
+    actividades.filter(
+      (actividad) =>
+        String(actividad.estado || "")
+          .toLowerCase() === "completada" ||
+        String(actividad.estado || "")
+          .toLowerCase() === "terminada"
+    ).length;
 
-        </div>
-      </div>
-    );
-  }
+
+  const pendientes =
+    actividades.filter(
+      (actividad) =>
+        String(actividad.estado || "")
+          .toLowerCase() === "pendiente"
+    ).length;
+
+
+  const altaPrioridad =
+    actividades.filter(
+      (actividad) =>
+        String(actividad.prioridad || "")
+          .toLowerCase() === "alta"
+    ).length;
+
+
+  const progreso =
+    totalActividades > 0
+      ? Math.round(
+          (completadas / totalActividades) * 100
+        )
+      : 0;
+
+
+  const actividadesProximas =
+    [...actividades]
+      .sort((a, b) => {
+
+        const fechaA =
+          new Date(
+            a.fechaEntrega ||
+            a.fecha
+          );
+
+        const fechaB =
+          new Date(
+            b.fechaEntrega ||
+            b.fecha
+          );
+
+        return fechaA - fechaB;
+
+      })
+      .slice(0, 5);
+
 
   return (
+
     <div className="dashboard">
+
+
+      {/* =====================================================
+          SIDEBAR
+      ===================================================== */}
 
       <aside className="sidebar">
 
         <div className="sidebar-logo">
-          📚 Ruta Académica
+
+          <h2>
+            Ruta Académica
+          </h2>
+
         </div>
+
 
         <nav>
 
           <Link to="/dashboard">
-            🏠 Inicio
+            Inicio
           </Link>
 
-          <Link to="/dashboard">
-            📚 Asignaturas
+          <Link to="/asignaturas">
+            Asignaturas
           </Link>
 
           <Link to="/actividades">
-            ✅ Actividades
+            Actividades
           </Link>
 
-          <Link to="/dashboard">
-            📅 Calendario
+          <Link to="/calendario">
+            Calendario
           </Link>
 
-          <Link to="/dashboard">
-            📈 Progreso
+          <Link to="/progreso">
+            Progreso
           </Link>
 
         </nav>
 
+
         <button
-          onClick={cerrarSesion}
           className="logout"
+          onClick={cerrarSesion}
         >
-          🚪 Salir
+          Salir
         </button>
 
       </aside>
 
+
+      {/* =====================================================
+          CONTENIDO
+      ===================================================== */}
+
       <main className="dashboard-content">
+
 
         <header className="dashboard-header">
 
           <div>
 
             <h1>
-              Hola, {usuario.nombre} 👋
+
+              Hola,{" "}
+
+              {usuario?.nombre ||
+                "Estudiante"}
+
             </h1>
 
             <p>
-              Aquí tienes un resumen de tu actividad académica.
+              Aquí tienes un resumen de tu
+              actividad académica.
             </p>
 
-          </div>
-
-          <div className="user-avatar">
-            {usuario.nombre
-              .split(" ")
-              .map((parte) => parte[0])
-              .slice(0, 2)
-              .join("")
-              .toUpperCase()}
           </div>
 
         </header>
 
-        <section className="dashboard-stats">
 
-          <div className="dashboard-stat">
-            <span>📋</span>
-            <strong>12</strong>
-            <p>Actividades pendientes</p>
+        {error && (
+
+          <div className="error-message">
+
+            {error}
+
           </div>
 
-          <div className="dashboard-stat">
-            <span>🔴</span>
-            <strong>5</strong>
-            <p>Alta prioridad</p>
-          </div>
+        )}
 
-          <div className="dashboard-stat">
-            <span>🟢</span>
-            <strong>8</strong>
-            <p>Completadas</p>
-          </div>
 
-          <div className="dashboard-stat">
-            <span>📊</span>
-            <strong>60%</strong>
-            <p>Progreso académico</p>
-          </div>
+        {loading ? (
 
-        </section>
+          <p>
+            Cargando información académica...
+          </p>
 
-        <section className="dashboard-grid">
+        ) : (
 
-          <div className="panel">
+          <>
 
-            <div className="panel-header">
 
-              <h2>
-                Actividades próximas
-              </h2>
+            {/* =================================================
+                ESTADÍSTICAS
+            ================================================= */}
 
-              <Link to="/actividades">
-                Ver todas
-              </Link>
+            <section className="dashboard-stats">
 
-            </div>
 
-            <div className="dashboard-activity">
+              <div className="dashboard-stat">
 
-              <div>
+                <span>
+                  Actividades pendientes
+                </span>
+
                 <strong>
-                  Taller de Bases de Datos
+                  {pendientes}
                 </strong>
 
-                <p>
-                  📚 Bases de Datos · 📅 30/09/2026
-                </p>
               </div>
 
-              <span className="priority high">
-                Alta
-              </span>
 
-            </div>
+              <div className="dashboard-stat">
 
-            <div className="dashboard-activity">
+                <span>
+                  Alta prioridad
+                </span>
 
-              <div>
                 <strong>
-                  Proyecto Desarrollo Web
+                  {altaPrioridad}
                 </strong>
 
-                <p>
-                  📚 Desarrollo Web · 📅 02/10/2026
-                </p>
               </div>
 
-              <span className="priority medium">
-                Media
-              </span>
 
-            </div>
+              <div className="dashboard-stat">
 
-            <div className="dashboard-activity">
+                <span>
+                  Completadas
+                </span>
 
-              <div>
                 <strong>
-                  Trabajo de Auditoría
+                  {completadas}
                 </strong>
 
-                <p>
-                  📚 Auditoría Informática · 📅 05/10/2026
-                </p>
               </div>
 
-              <span className="priority low">
-                Baja
-              </span>
 
-            </div>
+              <div className="dashboard-stat">
 
-          </div>
+                <span>
+                  Progreso académico
+                </span>
 
-          <div className="panel">
+                <strong>
+                  {progreso}%
+                </strong>
 
-            <h2>
-              Progreso
-            </h2>
+              </div>
 
-            <div className="progress-circle">
-              <strong>60%</strong>
-            </div>
 
-            <p className="progress-text">
-              Has completado 18 de 30 actividades.
-            </p>
+            </section>
 
-            <Link
-              to="/dashboard"
-              className="btn-primary"
-            >
-              Ver progreso
-            </Link>
 
-          </div>
+            {/* =================================================
+                GRID PRINCIPAL
+            ================================================= */}
 
-        </section>
+            <section className="dashboard-grid">
+
+
+              {/* ===============================================
+                  PRÓXIMAS ACTIVIDADES
+              =============================================== */}
+
+              <div className="panel">
+
+                <div className="panel-header">
+
+                  <h2>
+                    Próximas actividades
+                  </h2>
+
+                  <Link to="/actividades">
+                    Ver todas
+                  </Link>
+
+                </div>
+
+
+                {actividadesProximas.length === 0 ? (
+
+                  <p>
+                    No tienes actividades registradas.
+                  </p>
+
+                ) : (
+
+                  actividadesProximas.map(
+                    (actividad) => (
+
+                      <div
+                        className="dashboard-activity"
+                        key={
+                          actividad.id ||
+                          actividad._id
+                        }
+                      >
+
+                        <div>
+
+                          <h3>
+                            {actividad.nombre ||
+                              actividad.titulo ||
+                              "Actividad"}
+                          </h3>
+
+                          <p>
+
+                            {actividad.asignatura ||
+                              actividad.asignaturaNombre ||
+                              "Sin asignatura"}
+
+                            {" · "}
+
+                            {actividad.fechaEntrega ||
+                              actividad.fecha ||
+                              "Sin fecha"}
+
+                          </p>
+
+                        </div>
+
+
+                        <span
+                          className={`priority ${
+                            String(
+                              actividad.prioridad ||
+                              ""
+                            ).toLowerCase()
+                          }`}
+                        >
+
+                          {actividad.prioridad ||
+                            "Sin prioridad"}
+
+                        </span>
+
+                      </div>
+
+                    )
+                  )
+
+                )}
+
+              </div>
+
+
+              {/* ===============================================
+                  PROGRESO
+              =============================================== */}
+
+              <div className="panel">
+
+                <div className="panel-header">
+
+                  <h2>
+                    Progreso académico
+                  </h2>
+
+                  <Link to="/progreso">
+                    Ver progreso
+                  </Link>
+
+                </div>
+
+
+                <div className="progress-circle">
+
+                  <strong>
+                    {progreso}%
+                  </strong>
+
+                </div>
+
+
+                <p className="progress-text">
+
+                  Has completado{" "}
+
+                  <strong>
+                    {completadas}
+                  </strong>
+
+                  {" "}de{" "}
+
+                  <strong>
+                    {totalActividades}
+                  </strong>
+
+                  {" "}actividades.
+
+                </p>
+
+              </div>
+
+
+            </section>
+
+
+            {/* =================================================
+                ASIGNATURAS
+            ================================================= */}
+
+            <section className="panel">
+
+              <div className="panel-header">
+
+                <h2>
+                  Mis asignaturas
+                </h2>
+
+                <Link to="/asignaturas">
+                  Ver asignaturas
+                </Link>
+
+              </div>
+
+
+              {asignaturas.length === 0 ? (
+
+                <p>
+                  No tienes asignaturas registradas.
+                </p>
+
+              ) : (
+
+                <div>
+
+                  {asignaturas
+                    .slice(0, 4)
+                    .map(
+                      (asignatura) => (
+
+                        <div
+                          className="dashboard-activity"
+                          key={
+                            asignatura.id ||
+                            asignatura._id
+                          }
+                        >
+
+                          <div>
+
+                            <h3>
+                              {asignatura.nombre ||
+                                asignatura.name ||
+                                "Asignatura"}
+                            </h3>
+
+                          </div>
+
+                        </div>
+
+                      )
+                    )}
+
+                </div>
+
+              )}
+
+            </section>
+
+
+          </>
+
+        )}
+
 
       </main>
 
     </div>
+
   );
+
 }
+
 
 /* =========================================================
    APP
 ========================================================= */
 
 function App() {
+
   return (
+
     <BrowserRouter>
 
       <Routes>
@@ -777,10 +1070,28 @@ function App() {
           element={<Activities />}
         />
 
+        <Route
+          path="/asignaturas"
+          element={<Subjects />}
+        />
+
+        <Route
+          path="/calendario"
+          element={<Calendar />}
+        />
+
+        <Route
+          path="/progreso"
+          element={<Progress />}
+        />
+
       </Routes>
 
     </BrowserRouter>
+
   );
+
 }
+
 
 export default App;
