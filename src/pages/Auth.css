@@ -224,6 +224,7 @@
   .app-auth-brand {
     gap: 16px;
     padding: 20px 20px 24px;
+    height: 75px;
   }
 
   .app-auth-pitch {
