@@ -1,9 +1,14 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+
+import TemplateDownloadModal from "../components/TemplateDownloadModal";
+import {
+  descargarPlantilla,
+  leadFormConfigurado
+} from "../services/leadService";
 
 import "./Landing.css";
 
-const LEAD_FORM_URL = (import.meta.env.VITE_LEAD_FORM_URL || "").trim();
 const CURRENT_YEAR = new Date().getFullYear();
 
 const NAV_LINKS = [
@@ -70,7 +75,7 @@ const SURVEY_STATS = [
 const STEPS = [
   {
     title: "Descarga la plantilla.",
-    text: "Deja tu correo y recibe el enlace al archivo."
+    text: "Deja tu correo y la descarga empieza al instante."
   },
   {
     title: "Escribe tus asignaturas y entregas.",
@@ -172,19 +177,11 @@ function Logo() {
   );
 }
 
-function DownloadLink({ className, children }) {
-  if (!LEAD_FORM_URL) return null;
-
+function DownloadButton({ className, onClick, children }) {
   return (
-    <a
-      className={className}
-      href={LEAD_FORM_URL}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
+    <button type="button" className={className} onClick={onClick}>
       {children}
-      <span className="lp-sr-only"> (se abre en una pestaña nueva)</span>
-    </a>
+    </button>
   );
 }
 
@@ -227,14 +224,24 @@ function TemplatePreview() {
 
 function Landing() {
   const logged = hasSession();
+  const [modalAbierto, setModalAbierto] = useState(false);
+  const cerrarModal = () => setModalAbierto(false);
 
   useEffect(() => {
-    if (!LEAD_FORM_URL) {
+    if (!leadFormConfigurado) {
       console.warn(
-        "Landing: falta VITE_LEAD_FORM_URL. Define la URL del formulario de Google en .env para mostrar los botones de descarga de la plantilla."
+        "Landing: falta VITE_LEAD_FORM_ACTION o VITE_LEAD_FORM_EMAIL_ENTRY. Los botones descargan la plantilla directo, sin pedir el correo."
       );
     }
   }, []);
+
+  function pedirDescarga() {
+    if (leadFormConfigurado) {
+      setModalAbierto(true);
+    } else {
+      descargarPlantilla();
+    }
+  }
 
   return (
     <div className="lp">
@@ -255,23 +262,18 @@ function Landing() {
           </nav>
 
           <div className="lp-header-actions">
-            {!logged && (
-              <Link className="lp-btn lp-btn-ghost lp-hide-mobile" to="/login">
-                Iniciar sesión
-              </Link>
-            )}
-            {LEAD_FORM_URL ? (
-              <DownloadLink className="lp-btn lp-btn-primary">
-                Descargar plantilla
-              </DownloadLink>
-            ) : (
-              <Link
-                className="lp-btn lp-btn-primary"
-                to={logged ? "/dashboard" : "/registro"}
-              >
-                {logged ? "Ir a mi panel" : "Probar la versión web"}
-              </Link>
-            )}
+            <Link
+              className="lp-btn lp-btn-ghost lp-hide-mobile"
+              to={logged ? "/dashboard" : "/login"}
+            >
+              {logged ? "Ir a mi panel" : "Iniciar sesión"}
+            </Link>
+            <DownloadButton
+              className="lp-btn lp-btn-primary"
+              onClick={pedirDescarga}
+            >
+              Descargar plantilla
+            </DownloadButton>
           </div>
         </div>
       </header>
@@ -293,18 +295,23 @@ function Landing() {
               </p>
 
               <div className="lp-actions">
-                <DownloadLink className="lp-btn lp-btn-primary lp-btn-lg">
+                <DownloadButton
+                  className="lp-btn lp-btn-primary lp-btn-lg"
+                  onClick={pedirDescarga}
+                >
                   Descargar la plantilla gratis
-                </DownloadLink>
+                </DownloadButton>
                 <Link
-                  className={`lp-btn lp-btn-lg ${
-                    LEAD_FORM_URL ? "lp-btn-outline" : "lp-btn-primary"
-                  }`}
+                  className="lp-btn lp-btn-outline lp-btn-lg"
                   to={logged ? "/dashboard" : "/registro"}
                 >
                   {logged ? "Ir a mi panel" : "Probar la versión web"}
                 </Link>
               </div>
+
+              {leadFormConfigurado && (
+                <p className="lp-context">Solo te pedimos tu correo.</p>
+              )}
 
               <p className="lp-context">
                 Proyecto académico de Comercio Electrónico, Universidad Militar
@@ -436,13 +443,14 @@ function Landing() {
           <div className="lp-container">
             <h2 id="lp-cta-title">Empieza a organizar tu semestre</h2>
             <div className="lp-actions lp-actions-center">
-              <DownloadLink className="lp-btn lp-btn-light lp-btn-lg">
+              <DownloadButton
+                className="lp-btn lp-btn-light lp-btn-lg"
+                onClick={pedirDescarga}
+              >
                 Descargar la plantilla gratis
-              </DownloadLink>
+              </DownloadButton>
               <Link
-                className={`lp-btn lp-btn-lg ${
-                  LEAD_FORM_URL ? "lp-btn-outline-light" : "lp-btn-light"
-                }`}
+                className="lp-btn lp-btn-outline-light lp-btn-lg"
                 to={logged ? "/dashboard" : "/registro"}
               >
                 {logged ? "Ir a mi panel" : "Probar la versión web"}
@@ -462,6 +470,12 @@ function Landing() {
           <p>© {CURRENT_YEAR}</p>
         </div>
       </footer>
+
+      <TemplateDownloadModal
+        open={modalAbierto}
+        logged={logged}
+        onClose={cerrarModal}
+      />
     </div>
   );
 }

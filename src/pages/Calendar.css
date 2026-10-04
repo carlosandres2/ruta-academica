@@ -1,0 +1,107 @@
+.calendar-page .calendar-list {
+  display: grid;
+  gap: 14px;
+}
+
+.calendar-page .calendar-card {
+  display: flex;
+  align-items: stretch;
+  gap: 18px;
+  padding: 18px;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius);
+  box-shadow: var(--app-shadow-sm);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.calendar-page .calendar-card:hover {
+  box-shadow: var(--app-shadow);
+  transform: translateY(-2px);
+}
+
+.calendar-page .calendar-date {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  border-radius: 14px;
+  background: var(--app-blue);
+  color: #fff;
+  line-height: 1.1;
+}
+
+.calendar-page .calendar-date strong {
+  font-size: 1.7rem;
+}
+
+.calendar-page .calendar-date span {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.calendar-page .calendar-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.calendar-page .calendar-info h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  overflow-wrap: anywhere;
+}
+
+.calendar-page .calendar-info p {
+  margin: 4px 0 0;
+  color: var(--app-muted);
+  font-size: 0.92rem;
+}
+
+.calendar-page .calendar-info p.calendar-subject {
+  color: var(--app-blue-dark);
+  font-weight: 600;
+}
+
+.calendar-page .calendar-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.calendar-page .calendar-status span {
+  padding: 3px 12px;
+  border-radius: 999px;
+  background: var(--app-bg);
+  border: 1px solid var(--app-border);
+  color: var(--app-muted);
+  font-size: 0.85rem;
+}
+
+.calendar-page .calendar-status strong {
+  color: var(--app-text);
+}
+
+@media (max-width: 560px) {
+  .calendar-page .calendar-card {
+    gap: 14px;
+    padding: 14px;
+  }
+
+  .calendar-page .calendar-date {
+    width: 60px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .calendar-page .calendar-card {
+    transition: none;
+  }
+
+  .calendar-page .calendar-card:hover {
+    transform: none;
+  }
+}

@@ -1,0 +1,251 @@
+.app-auth {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  min-height: 100vh;
+  background: var(--app-bg);
+  color: var(--app-text);
+  font-family: var(--app-font);
+  line-height: 1.5;
+}
+
+.app-auth *,
+.app-auth *::before,
+.app-auth *::after {
+  box-sizing: border-box;
+}
+
+.app-auth a:focus-visible,
+.app-auth button:focus-visible {
+  outline: 3px solid var(--app-blue);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* ---------- Panel de marca ---------- */
+
+.app-auth-brand {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 32px;
+  padding: 40px;
+  background: linear-gradient(160deg, var(--app-navy) 0%, #1e2f55 100%);
+  color: #fff;
+}
+
+.app-auth-brand a:focus-visible {
+  outline-color: #fff;
+}
+
+.app-auth-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+
+.app-auth-pitch-title {
+  margin: 0 0 20px;
+  font-size: clamp(1.6rem, 1.2rem + 1.4vw, 2.2rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.app-auth-pitch ul {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.app-auth-pitch li {
+  position: relative;
+  padding-left: 30px;
+  color: #d7dce5;
+}
+
+.app-auth-pitch li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--app-blue)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12l4 4 8-8'/%3E%3C/svg%3E")
+    center / 12px no-repeat;
+}
+
+.app-auth-note {
+  margin: 0;
+  color: #aab3c5;
+  font-size: 0.875rem;
+}
+
+/* ---------- Formulario ---------- */
+
+.app-auth-main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+}
+
+.app-auth-card {
+  width: 100%;
+  max-width: 480px;
+  padding: 36px;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 20px;
+  box-shadow: var(--app-shadow);
+}
+
+.app-auth-card h1 {
+  margin: 0;
+  font-size: 1.7rem;
+  line-height: 1.2;
+}
+
+.app-auth-sub {
+  margin: 6px 0 0;
+  color: var(--app-muted);
+}
+
+.app-auth-form {
+  display: grid;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.app-auth-row {
+  display: grid;
+  gap: 16px;
+}
+
+.app-auth-field label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.app-auth-field input {
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 14px;
+  border: 2px solid var(--app-border-strong);
+  border-radius: var(--app-radius-sm);
+  background: #fff;
+  color: var(--app-text);
+  font: inherit;
+  font-size: 1rem;
+}
+
+.app-auth-field input:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.3);
+  border-color: var(--app-blue);
+}
+
+.app-auth-msg {
+  margin: 0;
+  padding: 12px 14px;
+  border-left: 4px solid;
+  border-radius: var(--app-radius-sm);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.app-auth-msg.is-error {
+  background: var(--app-danger-bg);
+  border-color: var(--app-danger);
+  color: var(--app-danger);
+}
+
+.app-auth-msg.is-success {
+  background: var(--app-success-bg);
+  border-color: var(--app-success);
+  color: var(--app-success);
+}
+
+.app-auth-submit {
+  min-height: 50px;
+  padding: 12px 20px;
+  border: 0;
+  border-radius: var(--app-radius-sm);
+  background: var(--app-blue);
+  color: #fff;
+  font: inherit;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.app-auth-submit:hover {
+  background: var(--app-blue-dark);
+}
+
+.app-auth-foot {
+  display: grid;
+  gap: 8px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--app-border);
+  text-align: center;
+  color: var(--app-muted);
+}
+
+.app-auth-foot p {
+  margin: 0;
+}
+
+.app-auth-foot a {
+  color: var(--app-blue-dark);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+@media (min-width: 640px) {
+  .app-auth-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 899px) {
+  .app-auth {
+    grid-template-columns: 1fr;
+  }
+
+  .app-auth-brand {
+    gap: 16px;
+    padding: 20px 20px 24px;
+  }
+
+  .app-auth-pitch {
+    display: none;
+  }
+
+  .app-auth-note {
+    display: none;
+  }
+
+  .app-auth-main {
+    align-items: flex-start;
+    padding: 20px 16px 32px;
+  }
+
+  .app-auth-card {
+    padding: 24px 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-auth-submit {
+    transition: none;
+  }
+}

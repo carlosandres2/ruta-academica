@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../services/api";
+import AppLayout from "../components/AppLayout";
+
+import "./Calendar.css";
 
 function Calendar() {
   const navigate = useNavigate();
@@ -53,11 +56,6 @@ function Calendar() {
 
     cargarActividades();
   }, [navigate]);
-
-  const cerrarSesion = () => {
-    localStorage.removeItem("rutaAcademicaSesion");
-    navigate("/login");
-  };
 
   const obtenerFecha = (actividad) => {
     return actividad.fecha_entrega || actividad.fecha || "";
@@ -162,49 +160,7 @@ function Calendar() {
   });
 
   return (
-    <div className="dashboard-layout">
-
-      <aside className="sidebar">
-
-        <div className="sidebar-header">
-          <h2>📚 Ruta Académica</h2>
-        </div>
-
-        <nav className="sidebar-nav">
-
-          <Link to="/dashboard">
-            🏠 Inicio
-          </Link>
-
-          <Link to="/asignaturas">
-            📚 Asignaturas
-          </Link>
-
-          <Link to="/actividades">
-            📝 Actividades
-          </Link>
-
-          <Link to="/calendario">
-            📅 Calendario
-          </Link>
-
-          <Link to="/progreso">
-            📈 Progreso
-          </Link>
-
-          <button
-            type="button"
-            onClick={cerrarSesion}
-            className="logout-button"
-          >
-            🚪 Salir
-          </button>
-
-        </nav>
-
-      </aside>
-
-      <main className="main-content">
+    <AppLayout pageClass="calendar-page">
 
         <header className="page-header">
 
@@ -323,9 +279,7 @@ function Calendar() {
 
         )}
 
-      </main>
-
-    </div>
+    </AppLayout>
   );
 }
 

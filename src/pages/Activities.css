@@ -1,0 +1,191 @@
+.activities-page .activities-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.activities-page .activities-toolbar h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.activities-page .activities-toolbar p {
+  margin: 2px 0 0;
+  color: var(--app-muted);
+}
+
+/* ---------- Formulario ---------- */
+
+.activities-page .activity-form-panel {
+  margin-bottom: 24px;
+  padding: 24px;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius);
+  box-shadow: var(--app-shadow-sm);
+}
+
+.activities-page .activity-form-panel h2 {
+  margin: 0 0 16px;
+  font-size: 1.2rem;
+}
+
+.activities-page .activity-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.activities-page .form-group {
+  min-width: 0;
+}
+
+.activities-page .form-group:nth-child(1),
+.activities-page .form-group:nth-child(2),
+.activities-page .form-group:nth-last-child(2) {
+  grid-column: 1 / -1;
+}
+
+.activities-page .form-buttons {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* ---------- Lista ---------- */
+
+.activities-page .activities-list {
+  display: grid;
+  gap: 14px;
+}
+
+.activities-page .activity-card {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius);
+  box-shadow: var(--app-shadow-sm);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.activities-page .activity-card:hover {
+  box-shadow: var(--app-shadow);
+  transform: translateY(-2px);
+}
+
+.activities-page .activity-card-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.activities-page .activity-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.activities-page .activity-card-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  overflow-wrap: anywhere;
+}
+
+.activities-page .activity-subject {
+  margin: 2px 0 0;
+  color: var(--app-blue-dark);
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+.activities-page .activity-description {
+  margin: 10px 0 0;
+  color: var(--app-muted);
+}
+
+.activities-page .activity-information {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: 12px;
+  color: var(--app-muted);
+  font-size: 0.92rem;
+}
+
+.activities-page .activity-information strong {
+  color: var(--app-text);
+}
+
+.activities-page .activity-observations {
+  margin-top: 12px;
+  padding: 10px 14px;
+  border-radius: var(--app-radius-sm);
+  background: var(--app-bg);
+  font-size: 0.92rem;
+}
+
+.activities-page .activity-observations p {
+  margin: 4px 0 0;
+  color: var(--app-muted);
+}
+
+.activities-page .activity-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+@media (max-width: 700px) {
+  .activities-page .activity-form {
+    grid-template-columns: 1fr;
+  }
+
+  .activities-page .activity-form .form-group {
+    grid-column: auto;
+  }
+
+  .activities-page .activity-card {
+    flex-direction: column;
+  }
+
+  .activities-page .activity-actions {
+    flex-direction: row;
+    width: 100%;
+  }
+
+  .activities-page .activity-actions button {
+    flex: 1;
+  }
+
+  .activities-page .activities-toolbar .btn-primary {
+    width: 100%;
+  }
+
+  .activities-page .activity-form-panel {
+    padding: 16px;
+  }
+
+  .activities-page .form-buttons button {
+    flex: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .activities-page .activity-card {
+    transition: none;
+  }
+
+  .activities-page .activity-card:hover {
+    transform: none;
+  }
+}

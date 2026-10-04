@@ -1,0 +1,143 @@
+.subjects-page > .btn-primary {
+  margin-bottom: 24px;
+}
+
+.subjects-page .subject-form {
+  margin-bottom: 28px;
+  padding: 24px;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius);
+  box-shadow: var(--app-shadow-sm);
+}
+
+.subjects-page .subject-form h2 {
+  margin: 0 0 16px;
+  font-size: 1.2rem;
+}
+
+.subjects-page .subject-form form {
+  display: grid;
+  gap: 16px;
+  max-width: 560px;
+}
+
+.subjects-page .subject-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* ---------- Tarjetas ---------- */
+
+.subjects-page .subjects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.subjects-page .subject-card {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius);
+  box-shadow: var(--app-shadow-sm);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.subjects-page .subject-card:hover {
+  box-shadow: var(--app-shadow);
+  transform: translateY(-2px);
+}
+
+.subjects-page .subject-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  background: var(--app-blue-soft);
+  font-size: 1.4rem;
+}
+
+.subjects-page .subject-card h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  overflow-wrap: anywhere;
+}
+
+.subjects-page .subject-type {
+  margin: 2px 0 0;
+  color: var(--app-blue-dark);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.subjects-page .subject-description {
+  margin: 10px 0 0;
+  color: var(--app-muted);
+}
+
+.subjects-page .subject-progress {
+  margin: 14px 0 6px;
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+.subjects-page .subject-bar {
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--app-border);
+}
+
+.subjects-page .subject-bar span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--app-blue);
+}
+
+/* El identificador interno no aporta al usuario. */
+.subjects-page .subject-id {
+  display: none;
+}
+
+.subjects-page .subject-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 16px;
+}
+
+.subjects-page .subject-actions button {
+  flex: 1;
+}
+
+@media (max-width: 700px) {
+  .subjects-page > .btn-primary {
+    width: 100%;
+  }
+
+  .subjects-page .subject-form {
+    padding: 16px;
+  }
+
+  .subjects-page .subject-form-actions button {
+    flex: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .subjects-page .subject-card {
+    transition: none;
+  }
+
+  .subjects-page .subject-card:hover {
+    transform: none;
+  }
+}

@@ -1,0 +1,247 @@
+/* Piezas compartidas del área interna. Siempre bajo .app-shell para no
+   filtrarse a la landing ni a las pantallas de acceso. */
+
+/* ---------- Encabezado de página ---------- */
+
+.app-shell .page-header,
+.app-shell .dashboard-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.app-shell .page-header h1,
+.app-shell .dashboard-header h1 {
+  margin: 0 0 4px;
+  font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.app-shell .page-header p,
+.app-shell .dashboard-header p {
+  margin: 0;
+  color: var(--app-muted);
+}
+
+/* El avatar ya vive en la barra lateral. */
+.app-shell .dashboard-header .user-avatar {
+  display: none;
+}
+
+/* ---------- Botones ---------- */
+
+.app-shell .btn-primary,
+.app-shell .btn-secondary,
+.app-shell .btn-edit,
+.app-shell .btn-delete,
+.app-shell .primary-button,
+.app-shell button:not([class]) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 18px;
+  border: 2px solid transparent;
+  border-radius: var(--app-radius-sm);
+  font: inherit;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.app-shell .btn-primary,
+.app-shell .primary-button {
+  background: var(--app-blue);
+  color: #fff !important;
+}
+
+.app-shell .btn-primary:hover,
+.app-shell .primary-button:hover {
+  background: var(--app-blue-dark);
+}
+
+.app-shell .btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.app-shell .btn-secondary,
+.app-shell button:not([class]) {
+  background: var(--app-surface);
+  border-color: var(--app-border-strong);
+  color: var(--app-navy);
+}
+
+.app-shell .btn-secondary:hover,
+.app-shell button:not([class]):hover {
+  background: var(--app-bg);
+  border-color: var(--app-navy);
+}
+
+.app-shell .btn-edit {
+  background: var(--app-info-bg);
+  color: var(--app-info);
+}
+
+.app-shell .btn-edit:hover {
+  background: #bfd3fb;
+}
+
+.app-shell .btn-delete {
+  background: var(--app-danger-bg);
+  color: var(--app-danger);
+}
+
+.app-shell .btn-delete:hover {
+  background: #fecaca;
+}
+
+/* ---------- Formularios ---------- */
+
+.app-shell label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.app-shell input:not([type="checkbox"]):not([type="radio"]),
+.app-shell select,
+.app-shell textarea {
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 14px;
+  border: 2px solid var(--app-border-strong);
+  border-radius: var(--app-radius-sm);
+  background: var(--app-surface);
+  color: var(--app-text);
+  font: inherit;
+}
+
+.app-shell textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.app-shell input:focus-visible,
+.app-shell select:focus-visible,
+.app-shell textarea:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.3);
+  border-color: var(--app-blue);
+}
+
+/* ---------- Mensajes ---------- */
+
+.app-shell .error-message,
+.app-shell .success-message {
+  margin-bottom: 20px;
+  padding: 12px 16px;
+  border-radius: var(--app-radius-sm);
+  border-left: 4px solid;
+  font-weight: 600;
+}
+
+.app-shell .error-message {
+  background: var(--app-danger-bg);
+  border-color: var(--app-danger);
+  color: var(--app-danger);
+}
+
+.app-shell .success-message {
+  background: var(--app-success-bg);
+  border-color: var(--app-success);
+  color: var(--app-success);
+}
+
+/* ---------- Estados vacíos ---------- */
+
+.app-shell .empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 40px 20px;
+  border: 2px dashed var(--app-border-strong);
+  border-radius: var(--app-radius);
+  background: var(--app-surface);
+  color: var(--app-muted);
+  text-align: center;
+}
+
+.app-shell .empty-state h2 {
+  margin: 0;
+  color: var(--app-text);
+  font-size: 1.2rem;
+}
+
+.app-shell .empty-state p {
+  margin: 0;
+}
+
+.app-shell .empty-icon {
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.app-shell .empty-state .primary-button {
+  margin-top: 8px;
+}
+
+/* ---------- Pills de prioridad y estado ---------- */
+
+.app-shell .priority,
+.app-shell .status {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.app-shell .priority.high,
+.app-shell .priority.alta {
+  background: var(--app-danger-bg);
+  color: var(--app-danger);
+}
+
+.app-shell .priority.medium,
+.app-shell .priority.media {
+  background: var(--app-warning-bg);
+  color: var(--app-warning);
+}
+
+.app-shell .priority.low,
+.app-shell .priority.baja {
+  background: var(--app-success-bg);
+  color: var(--app-success);
+}
+
+.app-shell .status.completed {
+  background: var(--app-success-bg);
+  color: var(--app-success);
+}
+
+.app-shell .status.progress {
+  background: var(--app-info-bg);
+  color: var(--app-info);
+}
+
+.app-shell .status.pending {
+  background: var(--app-warning-bg);
+  color: var(--app-warning);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-shell .btn-primary,
+  .app-shell .btn-secondary,
+  .app-shell .btn-edit,
+  .app-shell .btn-delete {
+    transition: none;
+  }
+}

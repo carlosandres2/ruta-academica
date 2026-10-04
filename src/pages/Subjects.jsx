@@ -6,6 +6,9 @@ import {
   actualizarAsignatura,
   eliminarAsignatura
 } from "../services/asignaturaService";
+import AppLayout from "../components/AppLayout";
+
+import "./Subjects.css";
 
 
 function Subjects() {
@@ -449,20 +452,16 @@ function Subjects() {
 
   return (
 
-    <div className="subjects-container">
+    <AppLayout pageClass="subjects-page">
 
-
-      <h1>
-        Mis asignaturas
-      </h1>
-
-
-      <p className="subjects-description">
-
-        Consulta y organiza las asignaturas
-        de tu programa académico.
-
-      </p>
+      <header className="page-header">
+        <div>
+          <h1>Mis asignaturas</h1>
+          <p className="subjects-description">
+            Consulta y organiza las asignaturas de tu programa académico.
+          </p>
+        </div>
+      </header>
 
 
       {/* =====================================================
@@ -471,12 +470,7 @@ function Subjects() {
 
       {error && (
 
-        <div
-          style={{
-            color: "red",
-            marginBottom: "15px"
-          }}
-        >
+        <div className="error-message" role="alert">
 
           {error}
 
@@ -487,12 +481,7 @@ function Subjects() {
 
       {mensaje && (
 
-        <div
-          style={{
-            color: "green",
-            marginBottom: "15px"
-          }}
-        >
+        <div className="success-message" role="status">
 
           {mensaje}
 
@@ -509,6 +498,7 @@ function Subjects() {
 
         <button
           type="button"
+          className="btn-primary"
           onClick={() => {
 
             setError("");
@@ -530,9 +520,6 @@ function Subjects() {
             setMostrarFormulario(true);
 
           }}
-          style={{
-            marginBottom: "25px"
-          }}
         >
 
           + Nueva asignatura
@@ -548,12 +535,7 @@ function Subjects() {
 
       {mostrarFormulario && (
 
-        <div
-          className="subject-form"
-          style={{
-            marginBottom: "30px"
-          }}
-        >
+        <div className="subject-form">
 
           <h2>
 
@@ -652,16 +634,10 @@ function Subjects() {
             </div>
 
 
-            <div
-              style={{
-                display: "flex",
-                gap: "10px",
-                marginTop: "15px"
-              }}
-            >
-
+            <div className="subject-form-actions">
               <button
                 type="submit"
+                className="btn-primary"
               >
 
                 {editandoId
@@ -675,6 +651,7 @@ function Subjects() {
 
                 type="button"
 
+                className="btn-secondary"
                 onClick={
                   limpiarFormulario
                 }
@@ -715,8 +692,7 @@ function Subjects() {
       {!cargando &&
         !error &&
         asignaturas.length === 0 && (
-
-          <div>
+          <div className="empty-state">
 
             <p>
               No tienes asignaturas registradas.
@@ -789,6 +765,10 @@ function Subjects() {
 
                   </p>
 
+                  <div className="subject-bar" aria-hidden="true">
+                    <span style={{ width: `${Math.min(100, Math.max(0, Number(asignatura.porcentaje_progreso) || 0))}%` }} />
+                  </div>
+
 
                   <p className="subject-id">
 
@@ -801,18 +781,10 @@ function Subjects() {
                       ACCIONES
                   ========================================= */}
 
-                  <div
-                    style={{
-                      display: "flex",
-                      gap: "10px",
-                      marginTop: "15px"
-                    }}
-                  >
-
+                  <div className="subject-actions">
                     <button
-
                       type="button"
-
+                      className="btn-edit"
                       onClick={() =>
                         manejarEditar(
                           asignatura
@@ -830,6 +802,7 @@ function Subjects() {
 
                       type="button"
 
+                      className="btn-delete"
                       onClick={() =>
                         manejarEliminar(
                           asignatura.id
@@ -855,12 +828,9 @@ function Subjects() {
         )}
 
 
-    </div>
-
+    </AppLayout>
   );
-
 }
-
 
 export default Subjects;
 

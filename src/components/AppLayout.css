@@ -1,0 +1,298 @@
+.app-shell {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  min-height: 100vh;
+  background: var(--app-bg);
+  color: var(--app-text);
+  font-family: var(--app-font);
+  line-height: 1.5;
+}
+
+.app-shell *,
+.app-shell *::before,
+.app-shell *::after {
+  box-sizing: border-box;
+}
+
+.app-skip {
+  position: absolute;
+  left: 16px;
+  top: -64px;
+  z-index: 200;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: var(--app-navy);
+  color: #fff;
+}
+
+.app-skip:focus {
+  top: 12px;
+}
+
+.app-shell a:focus-visible,
+.app-shell button:focus-visible {
+  outline: 3px solid var(--app-blue);
+  outline-offset: 2px;
+}
+
+/* ---------- Barra lateral ---------- */
+
+.app-sidebar {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100vh;
+  padding: 20px 14px;
+  background: var(--app-navy);
+  color: #d7dce5;
+  overflow-y: auto;
+}
+
+.app-sidebar a:focus-visible,
+.app-sidebar button:focus-visible {
+  outline-color: #fff;
+}
+
+.app-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  white-space: nowrap;
+}
+
+.app-sidebar .app-brand {
+  color: #fff;
+}
+
+.app-sidebar-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px 20px;
+}
+
+.app-close-btn,
+.app-menu-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.app-close-btn svg,
+.app-menu-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+.app-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.app-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  color: #d7dce5;
+  font-weight: 500;
+  transition: background 0.15s, color 0.15s;
+}
+
+.app-nav-link:hover {
+  background: var(--app-navy-soft);
+  color: #fff;
+}
+
+.app-nav-link.active {
+  background: var(--app-blue);
+  color: #fff;
+}
+
+.app-icon {
+  flex: none;
+  width: 20px;
+  height: 20px;
+}
+
+.app-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+  padding: 14px 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.app-avatar {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--app-blue);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.app-user-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.app-user-info strong {
+  color: #fff;
+  font-size: 0.95rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-user-info small {
+  color: #aab3c5;
+  font-size: 0.8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-logout {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  background: transparent;
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.app-logout:hover {
+  background: var(--app-navy-soft);
+}
+
+/* ---------- Contenido ---------- */
+
+.app-main {
+  min-width: 0;
+  padding: 32px 36px 48px;
+}
+
+/* ---------- Barra superior y cajón (móvil) ---------- */
+
+.app-topbar {
+  display: none;
+}
+
+.app-overlay {
+  display: none;
+}
+
+@media (max-width: 899px) {
+  .app-shell {
+    display: block;
+  }
+
+  .app-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 60px;
+    padding: 0 8px 0 16px;
+    background: var(--app-surface);
+    border-bottom: 1px solid var(--app-border);
+  }
+
+  .app-menu-btn,
+  .app-close-btn {
+    display: inline-flex;
+  }
+
+  .app-menu-btn {
+    color: var(--app-navy);
+  }
+
+  .app-menu-btn:hover {
+    background: var(--app-bg);
+  }
+
+  .app-close-btn:hover {
+    background: var(--app-navy-soft);
+  }
+
+  .app-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: block;
+    background: rgba(23, 32, 51, 0.55);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s, visibility 0s 0.2s;
+  }
+
+  .app-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+  }
+
+  .app-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 70;
+    width: min(300px, 86vw);
+    height: 100dvh;
+    transform: translateX(-100%);
+    visibility: hidden;
+    transition: transform 0.25s ease, visibility 0s 0.25s;
+  }
+
+  .app-sidebar.is-open {
+    transform: none;
+    visibility: visible;
+    transition-delay: 0s;
+  }
+
+  .app-main {
+    padding: 20px 16px 40px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-sidebar,
+  .app-overlay {
+    transition: none;
+  }
+}

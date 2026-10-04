@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../services/api";
+import AppLayout from "../components/AppLayout";
+
+import "./Progress.css";
 
 function Progress() {
   const navigate = useNavigate();
@@ -54,11 +57,6 @@ function Progress() {
     cargarActividades();
   }, [navigate]);
 
-  const cerrarSesion = () => {
-    localStorage.removeItem("rutaAcademicaSesion");
-    navigate("/login");
-  };
-
   const estaCompletada = (actividad) => {
     const estado = String(actividad.estado || "")
       .trim()
@@ -86,49 +84,7 @@ function Progress() {
       : 0;
 
   return (
-    <div className="dashboard-layout">
-
-      <aside className="sidebar">
-
-        <div className="sidebar-header">
-          <h2>📚 Ruta Académica</h2>
-        </div>
-
-        <nav className="sidebar-nav">
-
-          <Link to="/dashboard">
-            🏠 Inicio
-          </Link>
-
-          <Link to="/asignaturas">
-            📚 Asignaturas
-          </Link>
-
-          <Link to="/actividades">
-            📝 Actividades
-          </Link>
-
-          <Link to="/calendario">
-            📅 Calendario
-          </Link>
-
-          <Link to="/progreso">
-            📈 Progreso
-          </Link>
-
-          <button
-            type="button"
-            onClick={cerrarSesion}
-            className="logout-button"
-          >
-            🚪 Salir
-          </button>
-
-        </nav>
-
-      </aside>
-
-      <main className="main-content">
+    <AppLayout pageClass="progress-page">
 
         <header className="page-header">
 
@@ -160,7 +116,10 @@ function Progress() {
 
               <div className="progress-main-card">
 
-                <div className="progress-circle">
+                <div
+                  className="progress-circle"
+                  style={{ "--pct": porcentaje }}
+                >
                   <strong>{porcentaje}%</strong>
                   <span>Completado</span>
                 </div>
@@ -241,9 +200,7 @@ function Progress() {
           </>
         )}
 
-      </main>
-
-    </div>
+    </AppLayout>
   );
 }
 
