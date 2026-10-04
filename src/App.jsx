@@ -14,6 +14,7 @@ import Activities from "./pages/Activities";
 import Subjects from "./pages/Subjects";
 import Calendar from "./pages/Calendar";
 import Progress from "./pages/Progress";
+import Landing from "./pages/Landing";
 
 import {
   crearUsuario,
@@ -21,44 +22,6 @@ import {
 } from "./services/usuarioService";
 
 import api from "./services/api";
-
-
-/* =========================================================
-   INICIO
-========================================================= */
-
-function Inicio() {
-
-  return (
-    <div className="inicio">
-
-      <div className="inicio-card">
-
-        <h1>Ruta Académica</h1>
-
-        <p>
-          Organiza tus actividades. Prioriza tus tareas.
-          Avanza hacia tus objetivos académicos.
-        </p>
-
-        <div className="inicio-buttons">
-
-          <Link to="/login">
-            Iniciar sesión
-          </Link>
-
-          <Link to="/registro">
-            Crear cuenta
-          </Link>
-
-        </div>
-
-      </div>
-
-    </div>
-  );
-
-}
 
 
 /* =========================================================
@@ -1047,7 +1010,7 @@ function App() {
 
         <Route
           path="/"
-          element={<Inicio />}
+          element={<Landing />}
         />
 
         <Route
