@@ -6,12 +6,20 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#2563eb" />
+
     <meta
       name="description"
       content="Plantilla gratuita en Excel para organizar tus asignaturas, fechas de entrega y prioridades si estudias a distancia y trabajas."
     />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="Ruta Académica – Organiza tu semana de estudio" />
+
+    <meta
+      property="og:type"
+      content="website"
+    />
+    <meta
+      property="og:title"
+      content="Ruta Académica – Organiza tu semana de estudio"
+    />
     <meta
       property="og:description"
       content="Plantilla gratuita en Excel para organizar tus asignaturas, fechas de entrega y prioridades si estudias a distancia y trabajas."
@@ -19,19 +27,56 @@
     <meta property="og:locale" content="es_CO" />
     <meta name="twitter:card" content="summary" />
 
+    <title>Ruta Académica – Organiza tu semana de estudio</title>
+
     <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-3Q4XHLXEDT"></script>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-3Q4XHLXEDT"
+    ></script>
+
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
+
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+
       gtag('js', new Date());
       gtag('config', 'G-3Q4XHLXEDT');
     </script>
+    <!-- Fin de Google Analytics -->
 
-    <title>Ruta Académica – Organiza tu semana de estudio</title>
+    <!-- MailerLite Universal -->
+    <script>
+      (function (w, d, e, u, f, l, n) {
+        w[f] = w[f] || function () {
+          (w[f].q = w[f].q || []).push(arguments);
+        };
+
+        l = d.createElement(e);
+        l.async = 1;
+        l.src = u;
+
+        n = d.getElementsByTagName(e)[0];
+        n.parentNode.insertBefore(l, n);
+      })(
+        window,
+        document,
+        'script',
+        'https://assets.mailerlite.com/js/universal.js',
+        'ml'
+      );
+
+      ml('account', '2716866');
+    </script>
+    <!-- Fin de MailerLite Universal -->
+
   </head>
+
   <body>
     <div id="root"></div>
+
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
