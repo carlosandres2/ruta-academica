@@ -14,16 +14,12 @@ import Activities from "./pages/Activities";
 import Subjects from "./pages/Subjects";
 import Calendar from "./pages/Calendar";
 import Progress from "./pages/Progress";
-
+import Gracias from "./pages/Gracias";
 
 function App() {
-
   return (
-
     <BrowserRouter>
-
       <Routes>
-
         <Route
           path="/"
           element={<Landing />}
@@ -64,13 +60,13 @@ function App() {
           element={<Progress />}
         />
 
+        <Route
+          path="/gracias"
+          element={<Gracias />}
+        />
       </Routes>
-
     </BrowserRouter>
-
   );
-
 }
-
 
 export default App;
