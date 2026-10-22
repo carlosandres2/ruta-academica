@@ -12,10 +12,7 @@
       content="Plantilla gratuita en Excel para organizar tus asignaturas, fechas de entrega y prioridades si estudias a distancia y trabajas."
     />
 
-    <meta
-      property="og:type"
-      content="website"
-    />
+    <meta property="og:type" content="website" />
     <meta
       property="og:title"
       content="Ruta Académica – Organiza tu semana de estudio"
@@ -29,12 +26,11 @@
 
     <title>Ruta Académica – Organiza tu semana de estudio</title>
 
-    <!-- Google Analytics -->
+    <!-- Google Analytics 4 -->
     <script
       async
       src="https://www.googletagmanager.com/gtag/js?id=G-3Q4XHLXEDT"
     ></script>
-
     <script>
       window.dataLayer = window.dataLayer || [];
 
@@ -45,7 +41,7 @@
       gtag('js', new Date());
       gtag('config', 'G-3Q4XHLXEDT');
     </script>
-    <!-- Fin de Google Analytics -->
+    <!-- Fin de Google Analytics 4 -->
 
     <!-- MailerLite Universal -->
     <script>
@@ -72,11 +68,31 @@
     </script>
     <!-- Fin de MailerLite Universal -->
 
+    <!-- Metricool -->
+    <script>
+      function loadScript(a) {
+        var b = document.getElementsByTagName("head")[0];
+        var c = document.createElement("script");
+
+        c.type = "text/javascript";
+        c.src = "https://tracker.metricool.com/resources/be.js";
+        c.onreadystatechange = a;
+        c.onload = a;
+
+        b.appendChild(c);
+      }
+
+      loadScript(function () {
+        beTracker.t({
+          hash: "7f982c03626c66ec9365e3860f5a3437"
+        });
+      });
+    </script>
+    <!-- Fin de Metricool -->
   </head>
 
   <body>
     <div id="root"></div>
-
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
