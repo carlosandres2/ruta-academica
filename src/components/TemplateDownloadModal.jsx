@@ -3,8 +3,10 @@ import { Link } from "react-router-dom";
 
 import {
   descargarPlantilla,
-  enviarCorreoPlantilla
+  enviarCorreoPlantilla,
+  suscribirCorreo
 } from "../services/leadService";
+import { guardarCorreoLead, track } from "../services/tracking";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -41,9 +43,19 @@ function ModalContent({ logged, onClose }) {
 
     descargarPlantilla();
 
-    // Con el campo trampa relleno no se envía nada al formulario.
+    // Con el campo trampa relleno no se envía nada ni se registra el Lead.
     if (!trampa) {
+      // Respaldo en el formulario de Google (puede no estar configurado).
       enviarCorreoPlantilla(correoLimpio);
+      // MailerLite: dispara la secuencia automática del reto.
+      suscribirCorreo(correoLimpio);
+
+      guardarCorreoLead(correoLimpio);
+      track(
+        "Lead",
+        { content_name: "Plantilla de Excel + Reto de 3 días" },
+        { email: correoLimpio }
+      );
     }
 
     setListo(true);
@@ -142,9 +154,9 @@ function ModalContent({ logged, onClose }) {
             }
           />
           <span>
-            Autorizo el uso de mi correo electrónico para contactarme sobre
-            esta plantilla y las novedades del proyecto académico Ruta
-            Académica.
+            Autorizo el uso de mi correo electrónico para enviarme la
+            plantilla, el reto de 3 días y novedades, incluida una oferta, del
+            proyecto académico Ruta Académica.
           </span>
         </label>
         {errores.consentimiento && (

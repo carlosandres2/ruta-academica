@@ -1,7 +1,15 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
+import Logo from "../components/Logo";
 import TemplateDownloadModal from "../components/TemplateDownloadModal";
+import {
+  CHALLENGE,
+  SURVEY_NOTE,
+  SURVEY_STATS,
+  etiquetaDia,
+  fechasReto
+} from "../data/offer";
 import {
   descargarPlantilla,
   leadFormConfigurado
@@ -56,21 +64,6 @@ const ALERT_CLASS = {
   Urgente: "lp-alert-urgente",
   "Verificar fecha": "lp-alert-verificar"
 };
-
-const SURVEY_STATS = [
-  {
-    figure: "7 de 9",
-    text: "entregaron tarde o perdieron una actividad el semestre pasado"
-  },
-  {
-    figure: "2",
-    text: "herramientas en promedio para organizarse (agenda, calendario, plataforma de la universidad…)"
-  },
-  {
-    figure: "8 de 9",
-    text: "dedican 15 minutos o más a la semana solo a planificar"
-  }
-];
 
 const STEPS = [
   {
@@ -153,30 +146,6 @@ function Icon({ children }) {
   );
 }
 
-function Logo() {
-  return (
-    <Link to="/" className="lp-logo">
-      <svg
-        viewBox="0 0 32 32"
-        width="28"
-        height="28"
-        aria-hidden="true"
-        focusable="false"
-      >
-        <rect width="32" height="32" rx="8" fill="#2563eb" />
-        <path
-          d="M9 22c0-5 3-6 7-6s7-1 7-6M9 22h.01M23 10h.01"
-          stroke="#fff"
-          strokeWidth="2.6"
-          strokeLinecap="round"
-          fill="none"
-        />
-      </svg>
-      <span>Ruta Académica</span>
-    </Link>
-  );
-}
-
 function DownloadButton({ className, onClick, children }) {
   return (
     <button type="button" className={className} onClick={onClick}>
@@ -224,6 +193,7 @@ function TemplatePreview() {
 
 function Landing() {
   const logged = hasSession();
+  const fechasDelReto = fechasReto();
   const [modalAbierto, setModalAbierto] = useState(false);
   const cerrarModal = () => setModalAbierto(false);
 
@@ -334,10 +304,7 @@ function Landing() {
                 </div>
               ))}
             </div>
-            <p className="lp-footnote">
-              Encuesta propia a 9 estudiantes, muestra por conveniencia. Es un
-              dato de orientación, no una estadística representativa.
-            </p>
+            <p className="lp-footnote">{SURVEY_NOTE}</p>
           </div>
         </section>
 
@@ -384,6 +351,48 @@ function Landing() {
               La plantilla llega armada, con desplegables y cálculos
               automáticos: tú solo escribes tus materias y tus entregas.
             </p>
+          </div>
+        </section>
+
+        <section
+          id="reto"
+          className="lp-section"
+          aria-labelledby="lp-challenge-title"
+        >
+          <div className="lp-container">
+            <span className="lp-badge">Por correo, en 3 días</span>
+            <h2 id="lp-challenge-title" className="lp-challenge-title">
+              {CHALLENGE.name}
+            </h2>
+            <p className="lp-note">
+              Al descargar la plantilla te inscribes al reto: recibes un correo
+              por día con una tarea para dejar tu semestre ordenado.{" "}
+              {fechasDelReto
+                ? `Se realiza el ${fechasDelReto}.`
+                : "Las fechas se confirman por correo al inscribirte."}
+            </p>
+            <ol className="lp-grid lp-grid-3 lp-steps">
+              {CHALLENGE.days.map((day, index) => (
+                <li className="lp-card lp-step" key={day.title}>
+                  <span className="lp-step-num" aria-hidden="true">
+                    {index + 1}
+                  </span>
+                  <h3>{day.title}</h3>
+                  {etiquetaDia(day) && (
+                    <p className="lp-day-date">{etiquetaDia(day)}</p>
+                  )}
+                  <p>{day.text}</p>
+                </li>
+              ))}
+            </ol>
+            <div className="lp-actions">
+              <DownloadButton
+                className="lp-btn lp-btn-primary lp-btn-lg"
+                onClick={pedirDescarga}
+              >
+                Quiero inscribirme al reto
+              </DownloadButton>
+            </div>
           </div>
         </section>
 

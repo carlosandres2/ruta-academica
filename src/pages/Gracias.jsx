@@ -4,12 +4,9 @@ function Gracias() {
   useEffect(() => {
     document.title = "¡Gracias por suscribirte! | Ruta Académica";
 
-    // Registrar Lead si el píxel de Meta está instalado.
-    // La página debe utilizarse únicamente después
-    // de confirmar la suscripción.
-    if (typeof window.fbq === "function") {
-      window.fbq("track", "Lead");
-    }
+    // El evento Lead se registra al enviar el modal de la landing
+    // (ver TemplateDownloadModal y services/tracking.js). No se registra
+    // aquí para no contar dos veces la misma suscripción.
   }, []);
 
   return (
