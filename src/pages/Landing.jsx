@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import Logo from "../components/Logo";
@@ -10,10 +10,6 @@ import {
   etiquetaDia,
   fechasReto
 } from "../data/offer";
-import {
-  descargarPlantilla,
-  leadFormConfigurado
-} from "../services/leadService";
 
 import "./Landing.css";
 
@@ -197,22 +193,9 @@ function Landing() {
   const [modalAbierto, setModalAbierto] = useState(false);
   const cerrarModal = () => setModalAbierto(false);
 
-  useEffect(() => {
-    if (!leadFormConfigurado) {
-      console.warn(
-        "Landing: falta VITE_LEAD_FORM_ACTION o VITE_LEAD_FORM_EMAIL_ENTRY. Los botones descargan la plantilla directo, sin pedir el correo."
-      );
-    }
-  }, []);
-
   function pedirDescarga() {
-    if (leadFormConfigurado) {
-      setModalAbierto(true);
-    } else {
-      descargarPlantilla();
-    }
+    setModalAbierto(true);
   }
-
   return (
     <div className="lp">
       <a className="lp-skip" href="#contenido">
@@ -279,9 +262,7 @@ function Landing() {
                 </Link>
               </div>
 
-              {leadFormConfigurado && (
-                <p className="lp-context">Solo te pedimos tu correo.</p>
-              )}
+              <p className="lp-context">Solo te pedimos tu correo.</p>
 
               <p className="lp-context">
                 Proyecto académico de Comercio Electrónico, Universidad Militar

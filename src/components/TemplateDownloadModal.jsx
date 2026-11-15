@@ -1,3 +1,4 @@
+
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -16,16 +17,17 @@ function ModalContent({ logged, onClose }) {
   const [trampa, setTrampa] = useState("");
   const [errores, setErrores] = useState({});
   const [listo, setListo] = useState(false);
+  const [enviando, setEnviando] = useState(false);
 
   const correoRef = useRef(null);
   const consentimientoRef = useRef(null);
 
-  function enviar(evento) {
+  async function enviar(evento) {
     evento.preventDefault();
 
-    if (listo) return;
+    if (listo || enviando) return;
 
-    const correoLimpio = correo.trim();
+    const correoLimpio = correo.trim().toLowerCase();
 
     if (!EMAIL_REGEX.test(correoLimpio)) {
       setErrores({ correo: "Escribe un correo válido." });
@@ -34,31 +36,60 @@ function ModalContent({ logged, onClose }) {
     }
 
     if (!consentimiento) {
-      setErrores({ consentimiento: "Debes aceptar para continuar." });
+      setErrores({
+        consentimiento: "Debes aceptar para continuar."
+      });
       consentimientoRef.current?.focus();
       return;
     }
 
     setErrores({});
+    setEnviando(true);
 
-    descargarPlantilla();
+    try {
+      // Se inicia la descarga durante la acción del usuario.
+      descargarPlantilla();
 
-    // Con el campo trampa relleno no se envía nada ni se registra el Lead.
-    if (!trampa) {
-      // Respaldo en el formulario de Google (puede no estar configurado).
-      enviarCorreoPlantilla(correoLimpio);
-      // MailerLite: dispara la secuencia automática del reto.
-      suscribirCorreo(correoLimpio);
+      // Protección antispam.
+      if (trampa) {
+        setListo(true);
+        return;
+      }
+
+      // Esperar confirmación de MailerLite.
+      const registrado = await suscribirCorreo(correoLimpio);
+
+      if (!registrado) {
+        setErrores({
+          general:
+            "La plantilla se descargó, pero no pudimos registrar tu correo. Inténtalo nuevamente."
+        });
+        return;
+      }
+
+      // Respaldo de Google Forms, si sigue configurado.
+      void enviarCorreoPlantilla(correoLimpio);
 
       guardarCorreoLead(correoLimpio);
+
+      // Registrar Lead únicamente después de la confirmación.
       track(
         "Lead",
-        { content_name: "Plantilla de Excel + Reto de 3 días" },
+        {
+          content_name: "Plantilla de Excel + Reto de 3 días"
+        },
         { email: correoLimpio }
       );
-    }
 
-    setListo(true);
+      setListo(true);
+    } catch {
+      setErrores({
+        general:
+          "No pudimos completar el registro. Revisa tu conexión e inténtalo nuevamente."
+      });
+    } finally {
+      setEnviando(false);
+    }
   }
 
   if (listo) {
@@ -67,9 +98,9 @@ function ModalContent({ logged, onClose }) {
         <h2 id="lp-modal-title" className="lp-modal-title">
           ¡Listo! Tu descarga empezó
         </h2>
+
         <p className="lp-modal-text">
-          Revisa tu carpeta de descargas. Si no ves el archivo, usa el enlace
-          de abajo.
+          Tu registro fue recibido. Revisa tu carpeta de descargas y tu correo electrónico.
         </p>
 
         <button
@@ -87,7 +118,12 @@ function ModalContent({ logged, onClose }) {
           >
             {logged ? "Ir a mi panel" : "Probar la versión web"}
           </Link>
-          <button type="button" className="lp-btn lp-btn-outline" onClick={onClose}>
+
+          <button
+            type="button"
+            className="lp-btn lp-btn-outline"
+            onClick={onClose}
+          >
             Cerrar
           </button>
         </div>
@@ -96,16 +132,23 @@ function ModalContent({ logged, onClose }) {
   }
 
   return (
-    <form className="lp-modal-body" onSubmit={enviar} noValidate>
+    <form
+      className="lp-modal-body"
+      onSubmit={enviar}
+      noValidate
+      aria-busy={enviando}
+    >
       <h2 id="lp-modal-title" className="lp-modal-title">
         Descarga la plantilla gratis
       </h2>
+
       <p className="lp-modal-text">
-        Escribe tu correo y la descarga empieza al instante.
+        Escribe tu correo y recibirás la plantilla y el reto de 3 días.
       </p>
 
       <div className="lp-field">
         <label htmlFor="lp-correo">Correo electrónico</label>
+
         <input
           id="lp-correo"
           ref={correoRef}
@@ -115,12 +158,13 @@ function ModalContent({ logged, onClose }) {
           autoComplete="email"
           placeholder="correo@ejemplo.com"
           value={correo}
+          disabled={enviando}
           onChange={(e) => setCorreo(e.target.value)}
           aria-invalid={errores.correo ? "true" : undefined}
-          aria-describedby={errores.correo ? "lp-correo-error" : undefined}
         />
+
         {errores.correo && (
-          <p id="lp-correo-error" className="lp-field-error" role="alert">
+          <p className="lp-field-error" role="alert">
             {errores.correo}
           </p>
         )}
@@ -147,35 +191,40 @@ function ModalContent({ logged, onClose }) {
             type="checkbox"
             required
             checked={consentimiento}
+            disabled={enviando}
             onChange={(e) => setConsentimiento(e.target.checked)}
-            aria-invalid={errores.consentimiento ? "true" : undefined}
-            aria-describedby={
-              errores.consentimiento ? "lp-consentimiento-error" : undefined
-            }
           />
+
           <span>
             Autorizo el uso de mi correo electrónico para enviarme la
-            plantilla, el reto de 3 días y novedades, incluida una oferta, del
-            proyecto académico Ruta Académica.
+            plantilla, el reto de 3 días y novedades, incluida una oferta,
+            del proyecto académico Ruta Académica.
           </span>
         </label>
+
         {errores.consentimiento && (
-          <p
-            id="lp-consentimiento-error"
-            className="lp-field-error"
-            role="alert"
-          >
+          <p className="lp-field-error" role="alert">
             {errores.consentimiento}
           </p>
         )}
       </div>
 
+      {errores.general && (
+        <p className="lp-field-error" role="alert">
+          {errores.general}
+        </p>
+      )}
+
       <p className="lp-modal-small">
-        Usaremos tu correo solo para este proyecto académico.
+        Usaremos tu correo para los fines indicados en el consentimiento.
       </p>
 
-      <button type="submit" className="lp-btn lp-btn-primary lp-btn-lg lp-modal-submit">
-        Descargar plantilla
+      <button
+        type="submit"
+        disabled={enviando}
+        className="lp-btn lp-btn-primary lp-btn-lg lp-modal-submit"
+      >
+        {enviando ? "Registrando correo..." : "Descargar plantilla"}
       </button>
     </form>
   );
