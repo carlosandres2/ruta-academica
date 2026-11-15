@@ -1,12 +1,7 @@
-import { useEffect } from "react";
-import { Link, Navigate, useLocation } from "react-router-dom";
+﻿import { Link, Navigate, useLocation } from "react-router-dom";
 
 import FunnelLayout from "../components/FunnelLayout";
 import { ORDER_KEY, PRODUCT } from "../data/offer";
-import { track } from "../services/tracking";
-
-// Respaldo si sessionStorage no está disponible.
-const pedidosRegistrados = new Set();
 
 function leerPedidoGuardado() {
   try {
@@ -16,58 +11,10 @@ function leerPedidoGuardado() {
   }
 }
 
-function claveRegistro(orderId) {
-  return `ra_purchase_${orderId}`;
-}
-
-function yaRegistrado(orderId) {
-  if (pedidosRegistrados.has(orderId)) return true;
-
-  try {
-    return Boolean(sessionStorage.getItem(claveRegistro(orderId)));
-  } catch {
-    return false;
-  }
-}
-
-function marcarRegistrado(orderId) {
-  pedidosRegistrados.add(orderId);
-
-  try {
-    sessionStorage.setItem(claveRegistro(orderId), "1");
-  } catch {
-    // El Set en memoria ya evita duplicados mientras la pestaña siga abierta.
-  }
-}
-
 function PurchaseSuccess() {
   const location = useLocation();
   const pedido = location.state?.pedido || leerPedidoGuardado();
   const orderId = pedido?.orderId;
-  const value = pedido?.value;
-  const currency = pedido?.currency;
-
-  useEffect(() => {
-    if (!orderId || yaRegistrado(orderId)) return;
-
-    // Se marca antes de registrar para que recargar la página o el doble
-    // montaje de StrictMode en desarrollo no dupliquen el evento.
-    marcarRegistrado(orderId);
-
-    track(
-      "Purchase",
-      {
-        content_ids: [PRODUCT.id],
-        content_name: PRODUCT.name,
-        content_type: "product",
-        num_items: 1,
-        value,
-        currency
-      },
-      // El número de pedido es el event_id: Meta deduplica navegador y servidor.
-      { eventId: orderId }
-    );
-  }, [orderId, value, currency]);
 
   if (!orderId) {
     return <Navigate to="/ventas" replace />;
