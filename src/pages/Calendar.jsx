@@ -25,20 +25,7 @@ function Calendar() {
           return;
         }
 
-        const usuario = JSON.parse(sesion);
-        const usuarioId = usuario.id ?? usuario.usuario_id;
-
-        if (!usuarioId) {
-          setError("No se encontró el usuario de la sesión.");
-          setActividades([]);
-          return;
-        }
-
-        const respuesta = await api.get("/actividades", {
-          params: {
-            usuario_id: usuarioId,
-          },
-        });
+        const respuesta = await api.get("/actividades");
 
         const datos = Array.isArray(respuesta.data)
           ? respuesta.data
@@ -47,6 +34,13 @@ function Calendar() {
         setActividades(datos);
       } catch (err) {
         console.error("Error al cargar calendario:", err);
+
+        if (err.response?.status === 401) {
+          localStorage.removeItem("rutaAcademicaSesion");
+          navigate("/login");
+          return;
+        }
+
         setError("No fue posible cargar las actividades.");
         setActividades([]);
       } finally {
@@ -161,124 +155,105 @@ function Calendar() {
 
   return (
     <AppLayout pageClass="calendar-page">
+      <header className="page-header">
+        <div>
+          <h1>Calendario académico</h1>
 
-        <header className="page-header">
+          <p>
+            Consulta las fechas de entrega de tus actividades.
+          </p>
+        </div>
+      </header>
 
-          <div>
-            <h1>Calendario académico</h1>
+      {cargando && (
+        <div className="empty-state">
+          <p>Cargando actividades...</p>
+        </div>
+      )}
 
-            <p>
-              Consulta las fechas de entrega de tus actividades.
-            </p>
+      {!cargando && error && (
+        <div className="error-message">
+          {error}
+        </div>
+      )}
+
+      {!cargando && !error && ordenarActividades.length === 0 && (
+        <div className="empty-state">
+          <div className="empty-icon">
+            📅
           </div>
 
-        </header>
+          <h2>No tienes actividades registradas</h2>
 
-        {cargando && (
-          <div className="empty-state">
-            <p>Cargando actividades...</p>
-          </div>
-        )}
+          <p>
+            Cuando registres actividades, sus fechas de entrega
+            aparecerán aquí.
+          </p>
 
-        {!cargando && error && (
-          <div className="error-message">
-            {error}
-          </div>
-        )}
+          <Link
+            to="/actividades"
+            className="primary-button"
+          >
+            Registrar actividad
+          </Link>
+        </div>
+      )}
 
-        {!cargando && !error && ordenarActividades.length === 0 && (
-          <div className="empty-state">
+      {!cargando && !error && ordenarActividades.length > 0 && (
+        <div className="calendar-list">
+          {ordenarActividades.map((actividad) => {
+            const fecha = obtenerFecha(actividad);
 
-            <div className="empty-icon">
-              📅
-            </div>
+            return (
+              <article
+                className="calendar-card"
+                key={actividad.id}
+              >
+                <div className="calendar-date">
+                  <strong>
+                    {obtenerDia(fecha)}
+                  </strong>
 
-            <h2>No tienes actividades registradas</h2>
+                  <span>
+                    {obtenerMes(fecha)}
+                  </span>
+                </div>
 
-            <p>
-              Cuando registres actividades, sus fechas de entrega
-              aparecerán aquí.
-            </p>
+                <div className="calendar-info">
+                  <h2>
+                    {actividad.nombre}
+                  </h2>
 
-            <Link
-              to="/actividades"
-              className="primary-button"
-            >
-              Registrar actividad
-            </Link>
+                  <p className="calendar-subject">
+                    📚 {obtenerNombreAsignatura(actividad)}
+                  </p>
 
-          </div>
-        )}
+                  <p>
+                    <strong>Entrega:</strong>{" "}
+                    {formatearFecha(fecha)}
+                  </p>
 
-        {!cargando && !error && ordenarActividades.length > 0 && (
-
-          <div className="calendar-list">
-
-            {ordenarActividades.map((actividad) => {
-
-              const fecha = obtenerFecha(actividad);
-
-              return (
-                <article
-                  className="calendar-card"
-                  key={actividad.id}
-                >
-
-                  <div className="calendar-date">
-
-                    <strong>
-                      {obtenerDia(fecha)}
-                    </strong>
-
+                  <div className="calendar-status">
                     <span>
-                      {obtenerMes(fecha)}
+                      Prioridad:{" "}
+                      <strong>
+                        {actividad.prioridad || "Media"}
+                      </strong>
                     </span>
 
+                    <span>
+                      Estado:{" "}
+                      <strong>
+                        {actividad.estado || "Pendiente"}
+                      </strong>
+                    </span>
                   </div>
-
-                  <div className="calendar-info">
-
-                    <h2>
-                      {actividad.nombre}
-                    </h2>
-
-                    <p className="calendar-subject">
-                      📚 {obtenerNombreAsignatura(actividad)}
-                    </p>
-
-                    <p>
-                      <strong>Entrega:</strong>{" "}
-                      {formatearFecha(fecha)}
-                    </p>
-
-                    <div className="calendar-status">
-
-                      <span>
-                        Prioridad:{" "}
-                        <strong>
-                          {actividad.prioridad || "Media"}
-                        </strong>
-                      </span>
-
-                      <span>
-                        Estado:{" "}
-                        <strong>
-                          {actividad.estado || "Pendiente"}
-                        </strong>
-                      </span>
-
-                    </div>
-
-                  </div>
-
-                </article>
-              );
-            })}
-
-          </div>
-
-        )}
-
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      )}
     </AppLayout>
   );
 }
